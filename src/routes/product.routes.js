@@ -1,12 +1,14 @@
 import express from "express";
 const router = express.Router();
+const products = [];
+
 
 //crud product
-router.get("/product", (req, res) =>{
+//get all products
+//products
+router.get("/", (req, res) =>{
    // res.send("<h1>All product</h1>");
-   
-
- res.json({
+ res.status(200).json({
     message: "product fetched",
     success: true,
     date:product,
@@ -14,96 +16,65 @@ router.get("/product", (req, res) =>{
 });
 
 //get by id
-router.get("/product/:id", (req, res) =>{
+router.get("/:id", (req, res) =>{
    // res.send("<h1>All product</h1>");
-const id = req.params.id;
+const id = req.params;
 
- res.json({
-    message: "product fetched",
-    success: true,
-    date: {
-        _id: 1, 
-        // name: "jacket",
-        // price:'1000',
-        // brand:"zara"
+const product = products.find((product) => product.id == Number(id))
 
-        name: "Laptop",
-        category: "Electronics",
-        price: "85000",
-        stock: "15"
-    },
+ if (!product) {
+   res.status(404).json({
+    message: "product not found",
+    success: false,
+    date: null,
    });
+   return;
+}
+res.status(200).json({
+   message:`product by id ${id} fetched`,
+   success: true,
+   data: product,
 });
-
+});
+        _
+//create
 router.post("/product", (req, res) =>{
    // res.send("<h1>Product created</h1>");
-   const {name, category, price, stock} = req.body
+   const {name, category, price, stock} = req.body;
 
-product.push({
+products.push({
    name,
    category,
    price,
    stock,
    createdAt:new Date(Date.now()),
-   _id: product.length +1,
+   _id: product.length + 1,
 })
 
- res.json({
+ res.status(201).json({
     message: "product created",
     success: true,
-    date:product[product.length - 1]
+    date: products[products.length - 1]
    });
 });
 
+
 //update
-router.put("/product/:id", (req, res) =>{
-   // res.send("<h1>Product updated</h1>");
-//const id = req.params.id;
-const {id} = req.params;
-
-      const {name, category, price, stock} = req.body
-
-      const index = product.findIndex((product) => product._id === Number(id));
-
- 
-      if(index === -1){
-         res.json({
-message: "product not found",
-    success: false,
-    date:null
-         });
-         return
-      }
-
-      product[index] = {
-         ...product[index],
-         name,
-         category,
-         price,
-         stock
-      };
-
-      res.json({
-message: "product updated",
-    success: true,
-    date:product[index],
-         });
-
+router.put("/:id", (req, res) =>{
+   res.status(200).json({
+      message: `product updated`,
+      success: true,
+      data: {},
+   });
 });
 
 
 //delete
-router.delete("/product/:id", (req, res) => {
-   // res.send("<h1>Product Deleted</h1>");
-const id = req.params.id;
-
- res.json({
-    message: "product delete",
+router.delete("/:id", (req, res) => {
+ res.status(200).json({
+    message: `product delete`,
     success: true,
-    date: {
-        _id: 1, 
-        name: "laptop",
-    },
+    date: null,
    });
 });
 export default router;

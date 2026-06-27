@@ -1,5 +1,6 @@
 import express from "express";
 const router = express.Router();
+const users = [];
 
 
 //crud users
@@ -40,8 +41,8 @@ router.get("/:id", (req, res) =>{
    if(!user){
 res.status(400).json({
     message: "user by id fetched",
-    success: true,
-    date:null,
+    success: false,
+    date: null,
    });
    return;
 }
@@ -49,7 +50,7 @@ res.status(400).json({
 res.status(200).json({
    message: "user by id ${id} fetched",
     success: true,
-    date:null,
+    date: user,
 });
 });
 
@@ -58,20 +59,20 @@ res.status(200).json({
 router.post("/", (req, res) =>{
    // res.send("<h1>User created</h1>");
    //console.log(req.body);
-const {name,email,password} = req.body
+const {name, email, password} = req.body;
 
 users.push({
    name,
    email,
    password,
    createdAt:Date.now(),
-   _id: users.length +1,
-})
+   _id: users.length + 1,
+});
 
-   res.status(200).json({
+   res.status(201).json({
     message: "user created",
     success: true,
-    date:users[users.length - 1],
+    date: users[users.length - 1],
    });
 });
 
@@ -80,16 +81,15 @@ router.put("/:id", (req, res) =>{
    // res.send("<h1>User updated</h1>");
       //const id = req.params.id;
       const {id} = req.params;
-
-      const {name,email,password} = req.body
+      const {name, email, password} = req.body;
 
       const index = users.findIndex((user) => user._id === Number(id));
 
       if(index === -1){
          res.status(404).json({
-message: "user not found",
-    success: false,
-    date:null
+           message: "user not found",
+           success: false,
+          date: null
          });
          return
       }
@@ -101,12 +101,11 @@ message: "user not found",
          password
       };
 
-      res.status(201).json({
-message: "user updated",
-    success: true,
-    date:users[index],
+      res.status(200).json({
+        message: "user updated",
+        success: true,
+        date: users[index],
          });
-
 });
 
 
@@ -118,19 +117,19 @@ const {id} = req.params;
       const index = users.findIndex((user) => user._id === Number(id));
 
       if(index === -1){
-res.json({
+res.status(404).json({
 message: "user not found",
     success: false,
-    date:null
+    date: null
          });
          return
       }
 
-   users.slice(index,1);
-   res.json({
+   users.splice(index, 1);
+   res.status(200).json({
       message: "user deleted",
     success: true,
-    date:null
+    date: null
    });
 });
 
