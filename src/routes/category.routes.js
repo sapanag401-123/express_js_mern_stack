@@ -8,13 +8,13 @@ import {
    getById,
    remove,
    update,
-} from "../controllers/product.controller.js";
+} from "../controllers/category.controller.js";
 
 const router = express.Router();
 //crud product
 //get all products
 //products
-router.get("/", getAll );
+router.get("/", getAll);
 
 //get by id
 router.get("/:id", getById); 
@@ -39,7 +39,7 @@ router.get("/:id", getById);
 // });
 
 //create
-router.post("products",create );
+router.post("category",create );
 //    // res.send("<h1>Product created</h1>");
 //    const {name, category, price, stock} = req.body;
 

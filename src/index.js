@@ -2,6 +2,7 @@ import http from "http";
 import express from "express";
 import userRoutes from "./routes/user.routes.js";
 import productRoutes from "./routes/product.routes.js";
+import categoryRoutes from "./routes/category.routes.js"
 
 
 //creating express app instance
@@ -10,6 +11,8 @@ const app = express();
 //const users = [];
 
 //const product = [];
+
+//const category = [];
 
 //*creating http server
 const server = http.createServer(app);
@@ -30,11 +33,12 @@ app.get("/", (req, res) => {
 
 
 //using routes
-app.use("/users", useRoutes);
+app.use("/users", userRoutes);
 app.use("/products", productRoutes);
+app.use("/category", categoryRoutes);
 
 
-server.listen(8081, 'localhost', ()=>{
+server.listen(8081, () => {
     //127.0.0.1
     console.log(`Server is running at http://localhost:8081`);
     console.log("press ctrl+c to close the server");
@@ -121,3 +125,6 @@ server.listen(8081, 'localhost', ()=>{
 //resources-data or object which is identify end point
  //example ->/dashboard => {}
    //users =>json, html, 
+
+   //middleware -> vvi in interview
+   //database-mongodb
