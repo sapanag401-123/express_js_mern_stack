@@ -11,10 +11,14 @@ import {
 } from "../controllers/product.controller.js";
 
 const router = express.Router();
+const mid = (req,res, next)=>{
+   console.log("get all products mid");
+   next();
+}
 //crud product
 //get all products
 //products
-router.get("/", getAll );
+router.get("/", mid, mid, getAll );
 
 //get by id
 router.get("/:id", getById); 

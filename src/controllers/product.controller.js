@@ -15,6 +15,8 @@ export const getAll = (req, res) =>{
 
 //get by id
 export const getById = (req, res) =>{
+   console.log("get all product");
+   console.log(req.user);
    // res.send("<h1>All product</h1>");
 const id = req.params;
 
@@ -37,6 +39,9 @@ res.status(200).json({
 
 //create
 export const create = (req, res) =>{
+   //check authentication
+   //authorization
+
    // res.send("<h1>Product created</h1>");
    const {name, category, price, stock} = req.body;
 
@@ -58,6 +63,7 @@ products.push({
 
 
 //update
+//chk 
 export const update = (req, res) => {
    res.status(200).json({
       message: `product updated`,

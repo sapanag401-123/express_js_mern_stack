@@ -17,6 +17,40 @@ const app = express();
 //*creating http server
 const server = http.createServer(app);
 
+const middleware = (req, res, next) => {
+   console.log("middleware 1");
+   next();
+
+};
+app.use(middleware);
+
+app.use((req, res, next)=>{
+   console.log("mid 2");
+   req.user = {
+      name:"sapana gurung",
+   };
+   next();
+});
+
+
+//app.use(middleware);
+
+app.use((req, res, next)=>{
+   console.log("mid3");
+   console.log(req.user);
+   if(req.user){
+      next();
+   }else{
+   res.status(401).json({
+    message: "unauthorization. Access denied",
+   });
+}
+   //next();
+});
+
+
+
+
 app.use(express.json());
    
 
@@ -44,6 +78,18 @@ server.listen(8081, () => {
     console.log("press ctrl+c to close the server");
 });
 
+
+app.use((err,req,res,next)=>{ //global error handler
+   console.log("err handler");
+   console.log(err.message);
+
+   res.status(err?.statusCode ?? 500).json({
+    message: err?.message ?? "something went wrong ",
+    success: false,
+    date: null,
+   });
+
+});
 //brand, order, 
 
 //Express js /  nestjs -> framework
@@ -126,5 +172,18 @@ server.listen(8081, () => {
  //example ->/dashboard => {}
    //users =>json, html, 
 
-   //middleware -> vvi in interview
+   //middleware -> vvi in interview-> it is a function execute between req-res cycle
+   //1. has access to req obj, res obj and next function
+   //2. can execute own logic
+   //3. can modify req and res object
+   //4. can end req-res cycle
+
+   //types of middleware
+   //1 custom mid
+       //applicathion level middleware-every request same implement garna xa vana  direct attach garaxa app
+       //route level- kunaii euta matraii router handle garna xa vana
+       //error handler(err,req,res,next)=>>{}
+       //req - mid1 -mid2- mid3-midn -  controller(routing match hunxa ani )
+   //2 third party middleware
+
    //database-mongodb
