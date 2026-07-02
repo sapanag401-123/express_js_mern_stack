@@ -75,7 +75,7 @@ export const getById = async (req, res, next) => {
    const { id } = req.params;
 
    // const user = users.find((user) => user._id === Number(id));
-   const user = await User.findOne({_id: id});
+   const user = await User.findById({_id: id});
 // console.log(user);
    if (!user) {
 
@@ -101,20 +101,17 @@ next(error);
 
 //create
 //router.post("/", (req, res) =>{
-export const create = (req, res) => {
-
-
-
+export const create = async (req, res) => {
+   try{
    // res.send("<h1>User created</h1>");
    //console.log(req.body);
    const { name, email, password } = req.body;
-
-   users.push({
+   const user = await User.create({
       name,
       email,
       password,
-      createdAt: Date.now(),
-      _id: users.length + 1,
+      // createdAt: Date.now(),
+      // _id: users.length + 1,
    });
 
    res.status(201).json({
@@ -122,14 +119,22 @@ export const create = (req, res) => {
       success: true,
       date: users[users.length - 1],
    });
+} catch (error){
+   next(error);
+}
 };
 
 //update
-export const update = (req, res) => {
+export const update = async(req, res) => {
+   try {
    //res.send("<h1>User updated</h1>");
    // const id = req.params.id;
    const { id } = req.params;
-   const { name, email, password } = req.body;
+   const user = await User.findByIdAndUpdate(
+      id,
+            req.body,
+            { new: true }
+        );
 
    // const index = users.findIndex((user) => user._id === Number(id));
    //user. findByIdAndUpdate({_id:id,name, email, password},{new:true})
@@ -155,16 +160,20 @@ export const update = (req, res) => {
       success: true,
       date: users[index],
    });
+} catch (error) {
+   next();
+}
 };
 
 
 // //delete
-export const remove = (req, res) => {
+export const remove = async (req, res) => {
+   try {
    // res.send("<h1>User Deleted</h1>");
 
    const { id } = req.params;
-   const index = users.findIndex((user) => user._id === Number(id));
-
+   // const index = users.findIndex((user) => user._id === Number(id));
+   const user = await User.findByIdAndDelete(id);
    if (index === -1) {
       res.status(404).json({
          message: "user not found",
@@ -180,5 +189,8 @@ export const remove = (req, res) => {
       success: true,
       date: null
    });
+} catch (error) {
+   next (error);
+}
 };
 
