@@ -1,14 +1,48 @@
+import mongoose from "mongoose";
+
 const users = [];
+//user schema- defin e data type
+const userSchema = new mongoose.Schema(
+   {
+      name: {
+         type: String,
+         required: true,
+         minlength: 3,
+      },
+      email: {
+      type: String,
+         required: true,
+         unique: true,
+   },
+
+   password: {
+   type: String,
+   required: true,
+},
+   },
+
+   { timestamps: true },
+   
+);
+ //creating user model
+ const user = mongoose.model("user", userSchema);
+
 
 
 //crud users
 //get all users
 //get /users -> user page
 //route param (:id)
-export const getAll = (req, res) => {
+export const getAll = async (req, res, next) => {
+   try{
+
    // res.send("<h1>All Users</h1>");
    const query = req.query;
    console.log(query);
+
+   //dataabase find all query
+   const users = await User.find({});
+
 
    res.status(200).json({
       message: "users fetched",
@@ -20,13 +54,19 @@ export const getAll = (req, res) => {
       //      email: "john@gmail.com"
       //  },
    });
+} catch (error) {
+
+}next(error);
 };
 
 //get by id
 //users/100 => {id:100}
 // /posts/:userId/:postId => /posts/1/2 => {postId:2,userId}
 
-export const getById = (req, res, next) => {
+export const getById = async (req, res, next) => {
+   try{
+   // console.log("get all user");
+   // console.log(req.product);
    // res.send("<h1>All Users</h1>");
    //req.param => {} => {id:1}
    //console.log(req.params);
@@ -34,8 +74,9 @@ export const getById = (req, res, next) => {
 
    const { id } = req.params;
 
-   const user = users.find((user) => user._id === Number(id));
-console.log(user)
+   // const user = users.find((user) => user._id === Number(id));
+   const user = await User.findOne({_id: id});
+// console.log(user);
    if (!user) {
 
       next(
@@ -52,6 +93,9 @@ console.log(user)
       success: true,
       date: user,
    });
+} catch (error){
+next(error);
+}
 };
 
 
@@ -87,7 +131,8 @@ export const update = (req, res) => {
    const { id } = req.params;
    const { name, email, password } = req.body;
 
-   const index = users.findIndex((user) => user._id === Number(id));
+   // const index = users.findIndex((user) => user._id === Number(id));
+   //user. findByIdAndUpdate({_id:id,name, email, password},{new:true})
 
    if (index === -1) {
       res.status(404).json({
@@ -115,7 +160,7 @@ export const update = (req, res) => {
 
 // //delete
 export const remove = (req, res) => {
-   // // res.send("<h1>User Deleted</h1>");
+   // res.send("<h1>User Deleted</h1>");
 
    const { id } = req.params;
    const index = users.findIndex((user) => user._id === Number(id));

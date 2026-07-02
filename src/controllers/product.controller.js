@@ -6,6 +6,8 @@ const products = [];
 //products
 export const getAll = (req, res) =>{
    // res.send("<h1>All product</h1>");
+   console.log("get all product");
+   console.log(req.user);
  res.status(200).json({
     message: "product fetched",
     success: true,
@@ -14,31 +16,35 @@ export const getAll = (req, res) =>{
 };
 
 //get by id
-export const getById = (req, res) =>{
+export const getById = (req, res, next) =>{
    console.log("get all product");
    console.log(req.user);
    // res.send("<h1>All product</h1>");
-const id = req.params;
+const { id } = req.params;
 
 const product = products.find((product) => product.id == Number(id))
 
- if (!product) {
-   res.status(404).json({
-    message: "product not found",
-    success: false,
-    date: null,
+ console.log(product);
+   if (!product) {
+
+      next(
+         {
+         message: "product not found",
+         statusCode: 404,
+      }
+   );
+      return;
+   }
+
+   res.status(200).json({
+      message: "product by id ${id} fetched",
+      success: true,
+      date: product,
    });
-   return;
-}
-res.status(200).json({
-   message:`product by id ${id} fetched`,
-   success: true,
-   data: product,
-});
 };
 
 //create
-export const create = (req, res) =>{
+export const create = (req, res,) =>{
    //check authentication
    //authorization
 

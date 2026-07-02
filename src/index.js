@@ -2,7 +2,9 @@ import http from "http";
 import express from "express";
 import userRoutes from "./routes/user.routes.js";
 import productRoutes from "./routes/product.routes.js";
-import categoryRoutes from "./routes/category.routes.js"
+import categoryRoutes from "./routes/category.routes.js";
+import { connectDatabase } from "./config/db.config.js";
+
 
 
 //creating express app instance
@@ -17,6 +19,9 @@ const app = express();
 //*creating http server
 const server = http.createServer(app);
 
+//connection database
+connectDatabase();
+
 const middleware = (req, res, next) => {
    console.log("middleware 1");
    next();
@@ -26,8 +31,8 @@ app.use(middleware);
 
 app.use((req, res, next)=>{
    console.log("mid 2");
-   req.user = {
-      name:"sapana gurung",
+   req.product = {
+      name:"laptop",
    };
    next();
 });
@@ -37,8 +42,8 @@ app.use((req, res, next)=>{
 
 app.use((req, res, next)=>{
    console.log("mid3");
-   console.log(req.user);
-   if(req.user){
+   console.log(req.product);
+   if(req.product){
       next();
    }else{
    res.status(401).json({
